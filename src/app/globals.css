@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap');
+@import "tailwindcss";
+
+/* ── MAS Marine Design Tokens ───────────────────────────── */
+:root {
+  /* Brand */
+  --navy:          #212a7a;
+  --navy-dark:     #1a2260;
+  --navy-light:    #2d3a99;
+  --teal:          #36c6d3;
+  --teal-dark:     #2ba8b4;
+
+  /* Semantic */
+  --mas-success:   #8BC34A;
+  --mas-danger:    #F44336;
+  --mas-warning:   #FFCA28;
+
+  /* Layout */
+  --page-bg:       #fbfcfd;
+  --sidebar-width: 240px;
+
+  /* shadcn/ui CSS variable mappings */
+  --background:        255 255 255;
+  --foreground:        51 51 51;
+  --card:              255 255 255;
+  --card-foreground:   51 51 51;
+  --popover:           255 255 255;
+  --popover-foreground: 51 51 51;
+  --primary:           33 42 122;
+  --primary-foreground: 255 255 255;
+  --secondary:         245 245 245;
+  --secondary-foreground: 51 51 51;
+  --muted:             245 245 245;
+  --muted-foreground:  115 115 115;
+  --accent:            54 198 211;
+  --accent-foreground: 255 255 255;
+  --destructive:       244 67 54;
+  --destructive-foreground: 255 255 255;
+  --border:            197 214 222;
+  --input:             197 214 222;
+  --ring:              54 198 211;
+  --radius:            0rem;
+}
+
+/* ── Tailwind v4 theme extension ────────────────────────── */
+@theme inline {
+  --font-sans: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
+
+  /* Brand colours as Tailwind utilities */
+  --color-navy:           var(--navy);
+  --color-navy-dark:      var(--navy-dark);
+  --color-navy-light:     var(--navy-light);
+  --color-teal:           var(--teal);
+  --color-teal-dark:      var(--teal-dark);
+  --color-mas-success:    var(--mas-success);
+  --color-mas-danger:     var(--mas-danger);
+  --color-mas-warning:    var(--mas-warning);
+  --color-page:           var(--page-bg);
+
+  /* shadcn semantic colour utilities */
+  --color-background:     rgb(var(--background));
+  --color-foreground:     rgb(var(--foreground));
+  --color-card:           rgb(var(--card));
+  --color-card-foreground: rgb(var(--card-foreground));
+  --color-popover:        rgb(var(--popover));
+  --color-popover-foreground: rgb(var(--popover-foreground));
+  --color-primary:        rgb(var(--primary));
+  --color-primary-foreground: rgb(var(--primary-foreground));
+  --color-secondary:      rgb(var(--secondary));
+  --color-secondary-foreground: rgb(var(--secondary-foreground));
+  --color-muted:          rgb(var(--muted));
+  --color-muted-foreground: rgb(var(--muted-foreground));
+  --color-accent:         rgb(var(--accent));
+  --color-accent-foreground: rgb(var(--accent-foreground));
+  --color-destructive:    rgb(var(--destructive));
+  --color-destructive-foreground: rgb(var(--destructive-foreground));
+  --color-border:         rgb(var(--border));
+  --color-input:          rgb(var(--input));
+  --color-ring:           rgb(var(--ring));
+
+  /* Flat design — zero border-radius everywhere */
+  --radius-sm:   0rem;
+  --radius-md:   0rem;
+  --radius-lg:   0rem;
+  --radius-xl:   0rem;
+  --radius-2xl:  0rem;
+  --radius-full: 9999px;
+}
+
+/* ── Base resets ─────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
+  background-color: var(--page-bg);
+  color: #333;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Flat design enforcement on interactive elements */
+button:not([class*="rounded-full"]),
+input,
+select,
+textarea {
+  border-radius: 0 !important;
+}
+
+/* ── Sidebar scrollbar ───────────────────────────────────── */
+.sidebar-scroll::-webkit-scrollbar { width: 4px; }
+.sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+.sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+/* ── Pulsing REC indicator ───────────────────────────────── */
+@keyframes pulse-rec {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+.rec-pulse {
+  animation: pulse-rec 1.2s ease-in-out infinite;
+}
