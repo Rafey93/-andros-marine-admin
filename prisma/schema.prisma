@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  username     String   @unique
+  passwordHash String
+  role         String   @default("admin")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Student {
+  id             String   @id @default(cuid())
+  name           String
+  email          String   @unique
+  rank           String
+  course         String
+  enrollmentDate DateTime
+  status         String
+  progress       Int      @default(0)
+  riskScore      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Course {
+  id             String   @id @default(cuid())
+  title          String   @unique
+  category       String
+  duration       String
+  enrolledCount  Int      @default(0)
+  completionRate Int      @default(0)
+  status         String
+  color          String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Certificate {
+  id            String   @id @default(cuid())
+  studentName   String
+  courseName    String
+  issueDate     DateTime
+  expiryDate    DateTime
+  certificateNo String   @unique
+  status        String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Campaign {
+  id             String   @id @default(cuid())
+  title          String
+  assignedGroup  String
+  coursesJson    Json
+  deadline       DateTime
+  completionRate Int      @default(0)
+  status         String
+  totalAssigned  Int      @default(0)
+  completed      Int      @default(0)
+  description    String   @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model SmartGroup {
+  id           String   @id @default(cuid())
+  name         String   @unique
+  criteria     String   @db.Text
+  memberCount  Int      @default(0)
+  avgRiskScore Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Exam {
+  id        String         @id
+  title     String
+  courseId  String
+  duration  Int
+  questions ExamQuestion[]
+  sessions  ExamSession[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model ExamQuestion {
+  id           String   @id
+  examId       String
+  question     String   @db.Text
+  optionsJson  Json
+  correctIndex Int
+  sortOrder    Int      @default(0)
+  exam         Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+}
+
+model ExamSession {
+  id            String     @id
+  examId        String
+  examTitle     String
+  studentName   String
+  startTime     DateTime
+  endTime       DateTime?
+  snapshotCount Int        @default(0)
+  flagCount     Int        @default(0)
+  status        String
+  score         Int?
+  flagsJson     Json?
+  exam          Exam       @relation(fields: [examId], references: [id])
+  snapshots     Snapshot[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Snapshot {
+  id        String      @id @default(cuid())
+  sessionId String
+  timestamp DateTime
+  dataUrl    String      @db.LongText
+  session   ExamSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model ChartMetric {
+  id           String @id @default(cuid())
+  month        String
+  enrollments  Int
+  completions  Int
+  certificates Int
+  sortOrder    Int
+}

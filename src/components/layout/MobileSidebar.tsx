@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Anchor, LogOut } from 'lucide-react';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { navItems } from '@/lib/navItems';
-import { clearAuthCookie } from '@/lib/auth';
+import { logout } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -17,9 +17,10 @@ export default function MobileSidebar({ isOpen, onClose }: Props) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const handleLogout = () => {
-    clearAuthCookie();
+  const handleLogout = async () => {
+    await logout();
     router.push('/');
+    router.refresh();
   };
 
   return (

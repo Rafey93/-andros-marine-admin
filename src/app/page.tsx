@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Eye, EyeOff, Anchor, AlertCircle } from 'lucide-react';
-import { validateCredentials, setAuthCookie } from '@/lib/auth';
+import { login } from '@/lib/auth';
 
 const loginSchema = z.object({
   username: z.string().min(1, 'Username is required'),
@@ -27,10 +27,9 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
     setAuthError('');
-    await new Promise(r => setTimeout(r, 600));
-    if (validateCredentials(data.username, data.password)) {
-      setAuthCookie();
+    if (await login(data.username, data.password)) {
       router.push('/dashboard');
+      router.refresh();
     } else {
       setAuthError('Invalid username or password. Please try again.');
       setIsLoading(false);

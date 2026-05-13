@@ -14,7 +14,7 @@ export default function ExamPage() {
   const router = useRouter();
   const examId = params.id as string;
   const exam = exams.find(e => e.id === examId);
-  const sessionId = String(Date.now());
+  const [sessionId] = useState(() => String(Date.now()));
 
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
@@ -26,15 +26,13 @@ export default function ExamPage() {
   const { videoRef, flags, isRecording, cameraError, startRecording, stopRecording, snapshotCount } =
     useProctoring(sessionId, examId);
 
-  const handleSubmit = () => {
-    const session = stopRecording();
+  const handleSubmit = async () => {
     if (!exam) return;
     const correct = exam.questions.filter((q) => answers[q.id] === q.correctIndex).length;
     const pct = Math.round((correct / exam.questions.length) * 100);
+    const session = await stopRecording({ examTitle: exam.title, score: pct });
     setScore(pct);
     if (session) {
-      session.examTitle = exam.title;
-      session.score = pct;
       try {
         const existing = JSON.parse(localStorage.getItem('mas_exam_sessions') || '[]');
         const updated = existing.map((s: { id: string }) => s.id === session.id ? session : s);

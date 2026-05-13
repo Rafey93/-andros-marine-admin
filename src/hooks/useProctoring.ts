@@ -10,7 +10,7 @@ interface UseProctoringReturn {
   isRecording: boolean;
   cameraError: string | null;
   startRecording: () => Promise<void>;
-  stopRecording: () => ExamSession | null;
+  stopRecording: (updates?: Partial<ExamSession>) => Promise<ExamSession | null>;
   snapshotCount: number;
 }
 
@@ -96,7 +96,7 @@ export function useProctoring(sessionId: string, examId: string): UseProctoringR
     }
   }, [captureSnapshot]);
 
-  const stopRecording = useCallback((): ExamSession | null => {
+  const stopRecording = useCallback(async (updates: Partial<ExamSession> = {}): Promise<ExamSession | null> => {
     if (intervalRef.current) clearInterval(intervalRef.current);
 
     if (recorderRef.current && recorderRef.current.state !== 'inactive') {
@@ -119,6 +119,7 @@ export function useProctoring(sessionId: string, examId: string): UseProctoringR
       snapshotCount: snapshots.length,
       flagCount: flags.length,
       status: flags.length > 0 ? 'Flagged' : 'Completed',
+      ...updates,
     };
 
     // Save session
@@ -127,8 +128,16 @@ export function useProctoring(sessionId: string, examId: string): UseProctoringR
       localStorage.setItem('mas_exam_sessions', JSON.stringify([...existing, session]));
     } catch {}
 
+    try {
+      await fetch('/api/exam-sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...session, flags, snapshots }),
+      });
+    } catch {}
+
     return session;
-  }, [sessionId, examId, snapshots.length, flags.length]);
+  }, [sessionId, examId, snapshots, flags]);
 
   // Cleanup on unmount
   useEffect(() => {

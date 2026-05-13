@@ -1,5 +1,25 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Production Setup
+
+This app is wired for MySQL through Prisma. For HosterPK/cPanel:
+
+1. Create a MySQL database and user in cPanel.
+2. Add the user to the database with the required permissions.
+3. If the app runs on another host, add that host IP in cPanel Remote MySQL / Remote Database Access.
+4. Copy `.env.example` to `.env` and fill in `DATABASE_URL`, `AUTH_SECRET`, and the initial admin credentials.
+5. Run:
+
+```bash
+npm install
+npm run db:push
+npm run db:seed
+npm run build
+npm run start
+```
+
+Use Node.js `20.9.0` or newer for Next.js 16.
+
 ## Getting Started
 
 First, run the development server:

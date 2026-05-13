@@ -1,16 +1,16 @@
 'use client';
 
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { chartData } from '@/lib/mock-data';
+import type { ChartDataPoint } from '@/types';
 
-export default function EnrollmentChart() {
+export default function EnrollmentChart({ data }: { data: ChartDataPoint[] }) {
   return (
     <div className="bg-white p-5">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Enrollment Trends — 2025</h2>
       </div>
       <ResponsiveContainer width="100%" height={280}>
-        <ComposedChart data={chartData} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
+        <ComposedChart data={data} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#999' }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fontSize: 11, fill: '#999' }} axisLine={false} tickLine={false} />

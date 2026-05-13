@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { students } from '@/lib/mock-data';
 import { cn } from '@/lib/utils';
+import type { Student } from '@/types';
 
 const statusColors: Record<string, string> = {
   Active:    'bg-teal/10 text-teal-dark',
@@ -8,7 +8,7 @@ const statusColors: Record<string, string> = {
   Inactive:  'bg-gray-100 text-gray-500',
 };
 
-export default function RecentStudentsTable() {
+export default function RecentStudentsTable({ students }: { students: Student[] }) {
   const recent = [...students].slice(0, 5);
   return (
     <div className="bg-white">

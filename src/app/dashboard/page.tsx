@@ -3,8 +3,11 @@ import StatCard from '@/components/dashboard/StatCard';
 import EnrollmentChart from '@/components/dashboard/EnrollmentChart';
 import RecentStudentsTable from '@/components/dashboard/RecentStudentsTable';
 import Link from 'next/link';
+import { getDashboardOverview } from '@/lib/data';
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const { students, chartData, totals } = await getDashboardOverview();
+
   return (
     <div className="space-y-6">
       {/* Page title */}
@@ -17,7 +20,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard
           title="Total Students"
-          value="247"
+          value={String(totals.students)}
           icon={Users}
           iconBg="bg-teal/10"
           iconColor="text-teal"
@@ -27,7 +30,7 @@ export default function DashboardPage() {
         />
         <StatCard
           title="Active Courses"
-          value="12"
+          value={String(totals.activeCourses)}
           icon={BookOpen}
           iconBg="bg-navy/10"
           iconColor="text-navy"
@@ -37,7 +40,7 @@ export default function DashboardPage() {
         />
         <StatCard
           title="Certificates Issued"
-          value="389"
+          value={String(totals.certificates)}
           icon={Award}
           iconBg="bg-mas-success/10"
           iconColor="text-green-600"
@@ -47,7 +50,7 @@ export default function DashboardPage() {
         />
         <StatCard
           title="Completion Rate"
-          value="78%"
+          value={`${totals.completionRate}%`}
           icon={TrendingUp}
           iconBg="bg-mas-warning/10"
           iconColor="text-yellow-600"
@@ -58,12 +61,12 @@ export default function DashboardPage() {
       </div>
 
       {/* Chart */}
-      <EnrollmentChart />
+      <EnrollmentChart data={chartData} />
 
       {/* Recent students + quick actions */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         <div className="xl:col-span-2">
-          <RecentStudentsTable />
+          <RecentStudentsTable students={students} />
         </div>
 
         {/* Quick Actions */}

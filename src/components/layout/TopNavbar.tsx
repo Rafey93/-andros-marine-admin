@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 import { Menu, Bell, ChevronDown, LogOut, User } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { clearAuthCookie } from '@/lib/auth';
+import { logout } from '@/lib/auth';
 
 interface Props {
   onMenuClick: () => void;
@@ -19,9 +19,10 @@ export default function TopNavbar({ onMenuClick }: Props) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const handleLogout = () => {
-    clearAuthCookie();
+  const handleLogout = async () => {
+    await logout();
     router.push('/');
+    router.refresh();
   };
 
   return (

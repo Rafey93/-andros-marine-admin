@@ -4,16 +4,17 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Anchor, LogOut } from 'lucide-react';
 import { navItems } from '@/lib/navItems';
-import { clearAuthCookie } from '@/lib/auth';
+import { logout } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const handleLogout = () => {
-    clearAuthCookie();
+  const handleLogout = async () => {
+    await logout();
     router.push('/');
+    router.refresh();
   };
 
   return (

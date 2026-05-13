@@ -8,7 +8,10 @@ export function useExamTimer(durationMinutes: number, onExpire: () => void) {
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const onExpireRef = useRef(onExpire);
-  onExpireRef.current = onExpire;
+
+  useEffect(() => {
+    onExpireRef.current = onExpire;
+  }, [onExpire]);
 
   const start = useCallback(() => setIsRunning(true), []);
   const stop  = useCallback(() => setIsRunning(false), []);

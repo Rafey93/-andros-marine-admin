@@ -1,7 +1,9 @@
-import { courses } from '@/lib/mock-data';
+import { getCourses } from '@/lib/data';
 import { cn } from '@/lib/utils';
 
-export default function CoursesPage() {
+export default async function CoursesPage() {
+  const courses = await getCourses();
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">

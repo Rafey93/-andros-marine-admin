@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+const SESSION_COOKIE = 'mas_admin_session';
+
 export function proxy(request: NextRequest) {
-  const isAuthed = request.cookies.get('mas_admin_auth');
+  const isAuthed = request.cookies.get(SESSION_COOKIE);
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith('/dashboard') && !isAuthed) {
