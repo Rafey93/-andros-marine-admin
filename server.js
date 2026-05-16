@@ -1,4 +1,8 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
+if (!process.env.NODE_ENV) {
+  process.env.NODE_ENV = 'production';
+}
+
 const { createServer } = require('http');
 const next = require('next');
 

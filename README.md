@@ -7,8 +7,17 @@ This app is wired for MySQL through Prisma. For HosterPK/cPanel:
 1. Create a MySQL database and user in cPanel.
 2. Add the user to the database with the required permissions.
 3. If the app runs on another host, add that host IP in cPanel Remote MySQL / Remote Database Access.
-4. Copy `.env.example` to `.env` and fill in `DATABASE_URL`, `AUTH_SECRET`, and the initial admin credentials.
-5. Run:
+4. In **Setup Node.js App**, set:
+
+```text
+Application root: folder containing this package.json
+Application URL: lms.ami.com.pk
+Application startup file: server.js
+Node.js version: 20.9.0 or newer
+```
+
+5. Copy `.env.example` to `.env` and fill in `DATABASE_URL`, `AUTH_SECRET`, and the initial admin credentials.
+6. Run:
 
 ```bash
 npm install
@@ -17,6 +26,8 @@ npm run db:seed
 npm run build
 npm run start
 ```
+
+If the site shows `It works!` with a Node.js version, cPanel is still serving its generated sample Node app. Stop the app, confirm the application root points to this project, set the startup file to `server.js`, run `npm install` and `npm run build`, then restart the Node app.
 
 Use Node.js `20.9.0` or newer for Next.js 16.
 
