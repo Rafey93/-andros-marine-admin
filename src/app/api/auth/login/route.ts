@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
   if (!process.env.DATABASE_URL) {
     const username = process.env.ADMIN_USERNAME || 'maya';
-    const password = process.env.ADMIN_PASSWORD || 'change-this-before-production';
+    const password = process.env.ADMIN_PASSWORD || 'Easy@1234';
     if (body.data.username !== username || body.data.password !== password) {
       return NextResponse.json({ error: 'Invalid username or password.' }, { status: 401 });
     }
