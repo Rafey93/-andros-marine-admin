@@ -16,32 +16,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid login request.' }, { status: 400 });
     }
 
-    // Always use environment-based auth if ADMIN_USERNAME is set
-    if (process.env.ADMIN_USERNAME) {
-      const username = process.env.ADMIN_USERNAME;
-      const password = process.env.ADMIN_PASSWORD || 'Easy@1234';
-      if (body.data.username !== username || body.data.password !== password) {
-        return NextResponse.json({ error: 'Invalid username or password.' }, { status: 401 });
-      }
-
-      const token = await createSession({
-        id: 'env-admin',
-        name: process.env.ADMIN_NAME || 'Maya',
-        username,
-        role: 'admin',
-      });
-      const response = NextResponse.json({ ok: true });
-      response.cookies.set(SESSION_COOKIE, token, {
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 60 * 60 * 8,
-        path: '/',
-      });
-      return response;
-    }
-
-    // Fall back to database auth if DATABASE_URL is set
+    // Use database auth when the app is configured for Prisma/MySQL.
     if (process.env.DATABASE_URL) {
       const user = await prisma.user.findUnique({ where: { username: body.data.username } });
       if (!user || !(await bcrypt.compare(body.data.password, user.passwordHash))) {
@@ -66,16 +41,16 @@ export async function POST(request: Request) {
       return response;
     }
 
-    // Fallback to default credentials
-    const username = 'maya';
-    const password = 'Easy@1234';
+    // Fallback to environment/default credentials for local/offline use.
+    const username = process.env.ADMIN_USERNAME || 'maya';
+    const password = process.env.ADMIN_PASSWORD || 'Easy@1234';
     if (body.data.username !== username || body.data.password !== password) {
       return NextResponse.json({ error: 'Invalid username or password.' }, { status: 401 });
     }
 
     const token = await createSession({
       id: 'env-admin',
-      name: 'Maya',
+      name: process.env.ADMIN_NAME || 'Maya',
       username,
       role: 'admin',
     });
