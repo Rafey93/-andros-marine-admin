@@ -15,7 +15,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid login request.' }, { status: 400 });
   }
 
-  const user = await prisma.user.findUnique({ where: { username: body.data.username } });
+  let user;
+  try {
+    user = await prisma.user.findUnique({ where: { username: body.data.username } });
+  } catch (err) {
+    console.error('[login] DB error:', err);
+    return NextResponse.json({ error: `Database connection failed: ${(err as Error).message}` }, { status: 500 });
+  }
+
   if (!user || !(await bcrypt.compare(body.data.password, user.passwordHash))) {
     return NextResponse.json({ error: 'Invalid username or password.' }, { status: 401 });
   }
