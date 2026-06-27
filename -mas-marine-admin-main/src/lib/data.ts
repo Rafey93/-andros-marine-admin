@@ -17,7 +17,6 @@ const dateOnly = (value: Date) => value.toISOString().slice(0, 10);
 
 async function fallback<T>(query: () => Promise<T>, value: T): Promise<T> {
   noStore();
-  if (!process.env.DATABASE_URL) return value;
   try {
     return await query();
   } catch {

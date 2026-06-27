@@ -11,7 +11,16 @@ export default function ProctoringClient({ initialSessions }: { initialSessions:
     if (typeof window === 'undefined') return initialSessions;
     try {
       const stored = JSON.parse(localStorage.getItem('mas_exam_sessions') || '[]') as ExamSession[];
-      return stored.length > 0 ? [...stored, ...initialSessions] : initialSessions;
+      if (stored.length === 0) return initialSessions;
+      // Merge: stored sessions take precedence over server ones (they may have newer data)
+      const serverIds = new Set(initialSessions.map(s => s.id));
+      const storedIds = new Set(stored.map(s => s.id));
+      const serverOnly = initialSessions.filter(s => !storedIds.has(s.id));
+      const storedUpdated = stored.map(s => serverIds.has(s.id)
+        ? { ...initialSessions.find(is => is.id === s.id)!, ...s }
+        : s
+      );
+      return [...storedUpdated, ...serverOnly].sort((a, b) => b.startTime - a.startTime);
     } catch {
       return initialSessions;
     }

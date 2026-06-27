@@ -46,9 +46,8 @@ export default function TopNavbar({ onMenuClick }: Props) {
       {/* Right actions */}
       <div className="flex items-center gap-2">
         {/* Notification bell */}
-        <button className="relative p-1.5 text-gray-400 hover:text-gray-700 transition-colors">
+        <button className="relative p-1.5 text-gray-400 hover:text-gray-700 transition-colors" aria-label="Notifications">
           <Bell className="w-5 h-5" />
-          <span className="absolute top-1 right-1 w-2 h-2 bg-mas-danger rounded-full" />
         </button>
 
         {/* User menu */}

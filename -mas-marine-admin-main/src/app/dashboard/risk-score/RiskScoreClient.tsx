@@ -5,11 +5,6 @@ import { cn } from '@/lib/utils';
 import { AlertTriangle } from 'lucide-react';
 import type { Student, SmartGroup } from '@/types';
 
-const orgScore = 73;
-const radialData = [
-  { name: 'Score', value: orgScore, fill: orgScore >= 76 ? '#8BC34A' : orgScore >= 50 ? '#FFCA28' : '#F44336' },
-];
-
 const riskLabel = (score: number) =>
   score >= 76 ? { label: 'Low Risk', color: 'text-green-600', bg: 'bg-mas-success/10' }
   : score >= 50 ? { label: 'Medium Risk', color: 'text-yellow-600', bg: 'bg-mas-warning/10' }
@@ -25,6 +20,13 @@ export default function RiskScoreClient({
   riskTrendData: { month: string; score: number }[];
 }) {
   const atRisk = students.filter(s => s.riskScore < 50).sort((a, b) => a.riskScore - b.riskScore);
+  const orgScore = students.length
+    ? Math.round(students.reduce((sum, s) => sum + s.riskScore, 0) / students.length)
+    : 0;
+  const radialData = [
+    { name: 'Score', value: orgScore, fill: orgScore >= 76 ? '#8BC34A' : orgScore >= 50 ? '#FFCA28' : '#F44336' },
+  ];
+  const orgRisk = riskLabel(orgScore);
   return (
     <div className="space-y-6">
       <div>
@@ -52,8 +54,8 @@ export default function RiskScoreClient({
               <span className="text-xs text-gray-400 uppercase tracking-wider">/ 100</span>
             </div>
           </div>
-          <div className="mt-3 px-3 py-1.5 bg-mas-warning/10 text-yellow-700 text-xs font-semibold uppercase tracking-wider">
-            Medium Risk
+          <div className={cn('mt-3 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider', orgRisk.bg, orgRisk.color)}>
+            {orgRisk.label}
           </div>
           <p className="text-xs text-gray-400 mt-2 text-center">Improvement needed in cadet and ratings groups</p>
         </div>
